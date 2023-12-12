@@ -2,8 +2,9 @@
 
 source ./validation.sh
 
-if [[ $# == 6 ]]; then
-    validation $@
+validation $@
+if [[ $? -eq 0 ]]; then
+    echo "!"
 else
-    echo "incorrect"
+    exit 1
 fi
