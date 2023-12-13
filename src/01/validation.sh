@@ -7,7 +7,7 @@ error_message () {
 validation () {
     # debug $@
     error_code=0
-    if [[ $# == 6 ]]; then
+    if [[ ! $# == 6 ]]; then
         error_message "Ошибка: Введите 6 аргументов"
         error_code=1
     elif ! [[ -d $1 && $1 =~ ^'/' ]]; then
