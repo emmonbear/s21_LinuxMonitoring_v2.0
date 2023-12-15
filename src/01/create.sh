@@ -1,10 +1,10 @@
 #!/bin/bash
 
-generate_list_foldernames () {
-    number_files=$1
+generate_list_names () {
+    local count=$1
     local list=$2
-    generated_names=()
-    for ((i=0; i<$number_files;i++)); do
+    local generated_names=()
+    for ((i=0; i<$count;i++)); do
         local name="$list"
         local name_length=0
         while true; do
@@ -14,30 +14,47 @@ generate_list_foldernames () {
                 name_length=$((RANDOM % 12 + ${#list}))
             fi
             for ((j=0; j<$name_length - ${#list}; j++)); do
-                random_index=$((RANDOM % ${#name}))
-                char=${name:$random_index:1}
-                end_str=${name:$random_index}
+                local random_index=$((RANDOM % ${#name}))
+                local char=${name:$random_index:1}
+                local end_str=${name:$random_index}
                 name=${name:0:$random_index}
                 name=${name}${char}${end_str}
             done
-            if [[ ! " ${generated_names[@]} " =~ " ${name} " ]]; then
+            if [[ ! "${generated_names[@]}" =~ " ${name} " ]]; then
                 generated_names+=("$name")
-                # echo "$name"
                 break
-            else
-                continue
             fi
         done
     done
+    generated_array=("${generated_names[@]}")
 }
 
-create_folders () {
+create_folders_and_files () {
     local date=$(date +"%d%m%y")
-    generate_list_foldernames $2 $3
-    for ((i=0; i<${#generated_names[@]}; i++)); do
-        generated_names[i]="${generated_names[i]}_$date"
-        mkdir -p "$1/${generated_names[i]}"
-        # echo "${generated_names[i]}"
+    local path=$1
+    local count_folders=$2
+    local list_folder_symbols=$3
+    local count_files=$4
+    local list_file_symbols=$(echo $5 | awk -F. '{print $1}')
+    local file_extension=$(echo $5 | awk -F. '{print $2}')
+    local size="${6%?}"
+    local array_foldernames=()
+    local array_filenames=()
+    generate_list_names $count_folders $list_folder_symbols
+    array_foldernames=("${generated_array[@]}")
+
+    for folder in "${array_foldernames[@]}"; do
+        mkdir -p "$path/${folder}_${date}"
+        generate_list_names $count_files $list_file_symbols
+        array_filenames=("${generated_array[@]}")
+        for file in "${array_filenames[@]}"; do
+            fallocate -l $size ${path}/${folder}_${date}/${file}.${file_extension}_${date}
+        done
     done
+        
+
+    
+
 }
-# create_folders $1 $2
+
+
