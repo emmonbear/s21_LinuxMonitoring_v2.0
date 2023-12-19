@@ -58,4 +58,3 @@ generate_list_names () {
     done
     echo "${generated_array[@]}"
 }
-

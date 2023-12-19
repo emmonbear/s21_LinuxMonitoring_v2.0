@@ -12,6 +12,8 @@ create_folders_and_files () {
     local array_foldernames=()
     local array_filenames=()
 
+    local tmp_1=0
+    local tmp_2=0
     source ./generate_names.sh
 
     if ! array_foldernames=($(generate_list_names $count_folders $list_folder_symbols $path)); then
@@ -25,9 +27,24 @@ create_folders_and_files () {
     fi
 
     for folder in "${array_foldernames[@]}"; do
-        mkdir "$path/${folder}_${date}"
+        local dest_folder="$path${folder}_${date}"
+        mkdir "$dest_folder"
+        echo "По пути $path создан каталог ${folder}_${date} $(date +"%d.%m.%Y в %H:%M")" >> log.txt
+        ((tmp_1++))
         for file in "${array_filenames[@]}"; do
-            fallocate -l $size ${path}/${folder}_${date}/${file}_${date}.${file_extension}
+            local dest_file="${path}${folder}_${date}/${file}_${date}.${file_extension}"
+            fallocate -l $size "$dest_file"
+            echo -e "\tПо пути $dest_folder создан файл ${file}_${date}.${file_extension} размером ${size}b $(date +"%d.%m.%Y в %H:%M")" >> log.txt
+            ((tmp_2++))
+            if [[ $(available_memory) -lt 1048576 ]]; then
+                echo "Ошибка: В системе остается менее 1 Гб свободного места. Создано $tmp_1 каталогов, $tmp_2 файлов"
+                exit 1
+            fi
         done
-    done 
+    done
+    echo "Лог записан в файл log.txt" 
+}
+
+available_memory () {
+    echo "$(df / | grep /$ | awk '{print $4}')"
 }
