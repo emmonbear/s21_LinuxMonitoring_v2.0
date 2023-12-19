@@ -36,7 +36,7 @@ create_folders_and_files () {
             fallocate -l $size "$dest_file"
             echo -e "\tПо пути $dest_folder создан файл ${file}_${date}.${file_extension} размером ${size}b $(date +"%d.%m.%Y в %H:%M")" >> log.txt
             ((tmp_2++))
-            if [[ $(available_memory) -lt 1048576 ]]; then
+            if [[ $(available_memory) -le 1048576 ]]; then
                 echo "Ошибка: В системе остается менее 1 Гб свободного места. Создано $tmp_1 каталогов, $tmp_2 файлов"
                 exit 1
             fi
