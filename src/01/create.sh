@@ -13,10 +13,16 @@ create_folders_and_files () {
     local array_filenames=()
 
     source ./generate_names.sh
-    
-    array_foldernames=($(generate_list_names $count_folders $list_folder_symbols $path))
 
-    array_filenames=($(generate_list_names $count_files $list_file_symbols $path))
+    if ! array_foldernames=($(generate_list_names $count_folders $list_folder_symbols $path)); then
+        echo "Ошибка: Невозможно создать $count_folders уникальных имен для каталогов"
+        exit 1
+    fi
+
+    if ! array_filenames=($(generate_list_names $count_files $list_file_symbols $path)); then
+        echo "Ошибка: Невозможно создать $count_files уникальных имен для файлов"
+        exit 1
+    fi
 
     for folder in "${array_foldernames[@]}"; do
         mkdir "$path/${folder}_${date}"

@@ -4,9 +4,9 @@ generate_name () {
     local name=$1
     local name_length=0
     if ((${#name} < 4)); then
-        name_length=$((RANDOM % 25 + 4))
+        name_length=$((RANDOM % 35 + 4))
     else
-        name_length=$((RANDOM % 25 + ${#name}))
+        name_length=$((RANDOM % 35 + ${#name}))
     fi
     for ((j=0; j<$name_length - ${#name}; j++)); do
         local random_index=$((RANDOM % ${#name}))
@@ -24,7 +24,8 @@ scan () {
     for entry in "$1"/*; do
         if [[ -e "$entry" ]]; then
             name=$(basename "$entry")
-            generated_names+=(${name}_${date})
+            name=${name%%_*}
+            generated_names+=(${name})
         fi
     done
     echo ${generated_names[@]}
@@ -42,17 +43,17 @@ generate_list_names () {
     for ((i=0; i<$count;i++)); do
         local retries=0
         while true; do
-            # if [[ $retries -eq $max_retries ]]; then
-            #     echo "Ошибка: Невозможно создать $count уникальных имен"
-                # exit 1
-            # fi
-            local name=$(generate_name $2)
-            if [[ ! " ${generated_names[@]} " =~ " ${name} " ]]; then
-                generated_names+=($name)
-                generated_array+=($name)
-                break
+            if [[ $retries -eq $max_retries ]]; then
+                return 1
+            else
+                local name=$(generate_name $list)
+                if [[ ! " ${generated_names[@]} " =~ " ${name} " ]]; then
+                    generated_names+=($name)
+                    generated_array+=($name)
+                    break
+                fi
+                ((retries++))
             fi
-            ((retries++))
         done
     done
     echo "${generated_array[@]}"
