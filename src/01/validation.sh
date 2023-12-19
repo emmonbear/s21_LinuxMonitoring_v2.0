@@ -5,7 +5,6 @@ error_message () {
 }
 
 validation () {
-    # debug $@
     error_code=0
     if [[ ! $# == 6 ]]; then
         error_message "Ошибка: Введите 6 аргументов"
@@ -37,19 +36,4 @@ validation () {
         fi
     fi
     return $error_code
-}
-
-debug () {
-    param_1=$1
-    param_2=$2
-    param_3=$3
-    param_4=$4
-    param_5=$5
-    param_6=$6
-    echo "param_1=$param_1"
-    echo "param_2=$param_2"
-    echo "param_3=$param_3"
-    echo "param_4=$param_4"
-    echo "param_5=$param_5"
-    echo "param_6=$param_6"
 }
