@@ -2,5 +2,5 @@
 
 first_way () {
 
-echo "1"
+echo "$1"
 }

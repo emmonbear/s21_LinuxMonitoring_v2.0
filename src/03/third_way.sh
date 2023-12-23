@@ -1,5 +1,5 @@
 #!/bin/bash
 
 third_way () {
-    echo "3"
+    echo "$1"
 }
