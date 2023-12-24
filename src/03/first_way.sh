@@ -1,16 +1,31 @@
 #!/bin/bash
 
 first_way () {
+    source ./validation.sh
+    
+    local path=$@
 
-local path=$@
-source ./validation.sh
-validation_first_way $path
-if [[ $? -eq 0 ]]; then
-    mapfile -t first_column < <(awk '{print $1}' "$path")
-    for value in "${first_column[@]}"; do
-        rm -rf $value
-    done
-else
-    echo "FAILURE"
-fi
+    validation_first_way $path
+    if [[ $? -eq 0 ]]; then
+        source ./status_bar.sh
+
+        local start=1
+        local finish=$(wc -l < "$path")
+        
+        mapfile -t first_column < <(awk '{print $1}' "$path")
+        
+        process_status_bar $start $finish &
+        local pid=$!
+        for value in "${first_column[@]}"; do
+            if ! rm -rf $value 2>/dev/null; then
+                echo -e "\n\n${RED}Ошибка${RESET}: Не удается очистить файловую систему"
+                echo "Возможно требуется запустить скрипт с root правами"
+                kill -SIGINT "$pid"
+                return 1
+            fi
+        done
+        wait "$pid"
+    else
+        echo "FAILURE"
+    fi
 }
