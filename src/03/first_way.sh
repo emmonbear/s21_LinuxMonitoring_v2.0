@@ -2,7 +2,7 @@
 
 first_way () {
 
-local path=$1
+local path=$@
 source ./validation.sh
 validation_first_way $path
 if [[ $? -eq 0 ]]; then
