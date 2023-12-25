@@ -8,7 +8,7 @@ RED='\033[1;31m'
 DELETE='\033[K'
 UP='\033[A'
 
-hello () {
+dialog_hello () {
     clear
 
     echo -e "${GREEN}${BOLD}====================================================================="
@@ -22,7 +22,7 @@ hello () {
     echo -e "3) По маске имени (символы, нижнее подчёркивание и дата)"
 }
 
-choice_way () {
+dialog_choice_way () {
     echo -e -n "\n${BOLD}Введите номер способа (1/2/3): "
     read way
     if [[ $way =~ ^[1-3]$ ]]; then
@@ -32,7 +32,7 @@ choice_way () {
     fi
 }
 
-chosen_way_1 () {
+dialog_chosen_way_1 () {
     echo -e -n "${BOLD}"
     echo -e -n "Введите путь к лог файлу: "
     read log_path
@@ -42,7 +42,7 @@ chosen_way_1 () {
     echo -e "${UP}${DELETE}${BOLD}Выбран файл: ${YELLOW}${log_path}${RESET}\n"
 }
 
-chosen_way_2 () {
+dialog_chosen_way_2 () {
     error_code=0
     echo -e -n "${BOLD}Введите дату и время начала создания (ДД.ММ.ГГ ЧЧ:ММ): "
     read start_time
@@ -57,7 +57,11 @@ chosen_way_2 () {
         if [[ $? -eq 1 ]]; then
             error_code=1
         else
-            echo -e "${UP}${DELETE}Окончание создания файлов: ${YELLOW}${start_time}${RESET}"
+            echo -e "${UP}${DELETE}Окончание создания файлов: ${YELLOW}${end_time}${RESET}"
+            validation_date_1 "$start_time" "$end_time"
+            if [[ $? -eq 1 ]]; then
+                error_code=1
+            fi
         fi
     fi
     return $error_code
