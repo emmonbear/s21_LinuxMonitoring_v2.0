@@ -2,31 +2,22 @@
 # trap 'echo "# $BASH_COMMAND";read' DEBUG
 
 source ./validation.sh
-source ./greetings.sh
+source ./dialog.sh
+
 hello
-echo -e -n "\n${BOLD}Введите номер способа (1/2/3): "
-read way
-if [[ $way =~ ^[1-3]$ ]]; then
-    echo -e "${UP}${DELETE}Выбран способ: ${YELLOW}$way${RESET}\n"
-else
-    echo -e "${UP}${DELETE}${UP}"
-fi
+choice_way
 case $way in
     1)
         source ./first_way.sh
-        echo -e -n "Введите путь к лог файлу: "
-        read log_path
-        if [[ -z $log_path ]]; then
-            log_path="../02/log.txt"
-        fi
-        echo -e "${UP}${DELETE}${BOLD}Выбран файл: ${YELLOW}${log_path}${RESET}\n"
+        chosen_way_1
         first_way $log_path
         ;;
     2)
         source ./second_way.sh
-        echo -e -n "Введите дату и время создания: "
-        read creation_time
-        second_way $creation_time
+        chosen_way_2
+        if [[ $? -eq 0 ]]; then
+            second_way $start_time $end_time
+        fi
         ;;
     3)
         source ./third_way.sh
