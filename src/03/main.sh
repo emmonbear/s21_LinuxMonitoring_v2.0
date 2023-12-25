@@ -4,19 +4,21 @@
 source ./validation.sh
 source ./dialog.sh
 
-hello
-choice_way
+dialog_hello
+dialog_choice_way
 case $way in
     1)
         source ./first_way.sh
-        chosen_way_1
+        dialog_chosen_way_1
         first_way $log_path
         ;;
     2)
         source ./second_way.sh
-        chosen_way_2
+        # source ./dialog.sh
+        dialog_chosen_way_2
+        
         if [[ $? -eq 0 ]]; then
-            second_way $start_time $end_time
+            second_way "$start_time" "$end_time"
         fi
         ;;
     3)

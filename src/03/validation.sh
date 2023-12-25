@@ -27,3 +27,14 @@ validation_date () {
     return $error_code
 }
 
+validation_date_1 () {
+    local error_code=0
+    local date_1="$1"
+    local date_2="$2"
+    if [[ $(time_per_sec "$date_1") -gt $(time_per_sec "$date_2") ]]; then
+        error_message "${UP}${DELETE}${RED}Ошибка${RESET}: Время начала генерации файлов не может быть больше времени окончания"
+        error_code=1
+    fi
+    return $error_code
+}
+
