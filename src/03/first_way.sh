@@ -18,10 +18,12 @@ first_way () {
         local pid=$!
         for value in "${first_column[@]}"; do
             if ! rm -rf $value 2>/dev/null; then
-                echo -e "\n\n${RED}Ошибка${RESET}: Не удается очистить файловую систему"
-                echo "Возможно требуется запустить скрипт с root правами"
-                kill -SIGINT "$pid" ## попробовать без флага
-                return 1
+                if ! rmdir $value 2>/dev/null; then
+                    echo -e "\n\n${RED}Ошибка${RESET}: Не удается очистить файловую систему"
+                    echo "Возможно требуется запустить скрипт с root правами"
+                    kill -SIGINT "$pid" ## попробовать без флага
+                    return 1
+                fi
             fi
         done
         wait "$pid"
