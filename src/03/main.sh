@@ -14,7 +14,6 @@ case $way in
         ;;
     2)
         source ./second_way.sh
-        # source ./dialog.sh
         dialog_chosen_way_2
         
         if [[ $? -eq 0 ]]; then
