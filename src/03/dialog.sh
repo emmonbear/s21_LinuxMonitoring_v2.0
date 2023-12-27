@@ -76,7 +76,6 @@ dialog_chosen_way_3 () {
         error_code=1
     else
         echo -e "${UP}${DELETE}${BOLD}Выбрана маска: ${YELLOW}${name_mask}${RESET}\n"
-        third_way $name_mask
     fi
     return $error_code
 }
