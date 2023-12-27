@@ -41,10 +41,7 @@ validation_date_1 () {
 validation_mask () {
     local error_code=0
     local mask="$1"
-    if [[ ! $# -eq 1 ]]; then
-        error_message "Введите один аргумент в формате symbols_MMDDYY"
-        error_code=1
-    elif [[ ! $mask =~ ^([a-zA-Z]{2,7})\_((0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])([0-9]{2}))$ ]]; then
+    if [[ ! $mask =~ ^([a-zA-Z]{2,7})\_((0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])([0-9]{2}))$ ]]; then
         error_message "Введите аргумент в формате symbols_MMDDYY"
         error_code=1
     fi
