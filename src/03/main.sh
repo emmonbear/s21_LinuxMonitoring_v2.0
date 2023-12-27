@@ -22,9 +22,10 @@ case $way in
         ;;
     3)
         source ./third_way.sh
-        echo -e -n "Введите маску имени: "
-        read name_mask
-        third_way $name_mask
+        dialog_chosen_way_3
+        if [[ $? -eq 0 ]]; then
+            third_way "$start_time" "$end_time"
+        fi
         ;;
     *)
         echo -e "${RED}Ошибка${RESET}: Неверный ввод. Пожалуйста, введите число (${YELLOW}1${RESET}/${YELLOW}2${RESET}/${YELLOW}3${RESET})"
