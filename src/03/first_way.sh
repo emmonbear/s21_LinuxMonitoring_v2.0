@@ -17,15 +17,15 @@ first_way () {
         process_status_bar $start $finish &
         local pid=$!
         for value in "${first_column[@]}"; do
-            if ! rm -rf $value 2>/dev/null; then
-                if ! rmdir $value 2>/dev/null; then
-                    echo -e "\n\n${RED}Ошибка${RESET}: Не удается очистить файловую систему"
-                    echo "Возможно требуется запустить скрипт с root правами"
-                    kill -SIGINT "$pid" ## попробовать без флага
-                    return 1
-                fi
+            if ! rm -rf $value 2>/dev/null && ! rmdir $value 2>/dev/null; then
+                echo -e "\n\n${RED}Ошибка${RESET}: Не удается очистить файловую систему"
+                echo "Возможно требуется запустить скрипт с root правами"
+                kill -SIGINT "$pid" ## попробовать без флага
+                return 1
             fi
         done
         wait "$pid"
     fi
 }
+# qwer helps.txt 10Mb
+# qwer_271223
