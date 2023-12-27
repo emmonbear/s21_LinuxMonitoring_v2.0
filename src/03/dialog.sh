@@ -43,7 +43,7 @@ dialog_chosen_way_1 () {
 }
 
 dialog_chosen_way_2 () {
-    error_code=0
+    local error_code=0
     echo -e -n "${BOLD}Введите дату и время начала создания (ДД.ММ.ГГ ЧЧ:ММ): "
     read start_time
     validation_date "$start_time"
@@ -63,6 +63,20 @@ dialog_chosen_way_2 () {
                 error_code=1
             fi
         fi
+    fi
+    return $error_code
+}
+
+dialog_chosen_way_3 () {
+    local error_code=0
+    echo -e -n "${BOLD}Введите маску имени в формате ${YELLOW}symbols_MMDDYY${RESET}: "
+    read name_mask
+    validation_mask "$name_mask"
+    if [[ $? -eq 1 ]]; then
+        error_code=1
+    else
+        echo -e "${UP}${DELETE}${BOLD}Выбрана маска: ${YELLOW}${name_mask}${RESET}\n"
+        third_way $name_mask
     fi
     return $error_code
 }
