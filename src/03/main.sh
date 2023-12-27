@@ -24,7 +24,7 @@ case $way in
         source ./third_way.sh
         dialog_chosen_way_3
         if [[ $? -eq 0 ]]; then
-            third_way "$start_time" "$end_time"
+            third_way "$name_mask"
         fi
         ;;
     *)
