@@ -20,7 +20,6 @@ generate_name () {
 
 scan () {
     local generated_names=()
-    local date=$(date +"%d%m%y")
     for entry in "$1"/*; do
         if [[ -e "$entry" ]]; then
             name=$(basename "$entry")
@@ -35,11 +34,9 @@ generate_list_names () {
     local count=$1
     local list=$2
     local path=$3
-    local name_length=0
     local max_retries=1000
     local generated_array=()
     local generated_names=$(scan $path)
-    source ./generate_names.sh
     for ((i=0; i<$count;i++)); do
         local retries=0
         while true; do
