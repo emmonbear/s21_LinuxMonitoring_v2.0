@@ -5,11 +5,11 @@ error_message () {
 }
 
 validation () {
-    error_code=0
-    if [[ ! $# == 6 ]]; then
+    local error_code=0
+    if [[ ! $# -eq 6 ]]; then
         error_message "Введите 6 аргументов"
         error_code=1
-    elif ! [[ -d $1 && $1 =~ ^'/' && $1 =~ '/'$ ]]; then
+    elif ! [[ -d $1 && $1 =~ ^'/' ]]; then
         error_message "Некорректный 1 аргумент. Введите абсолютный путь"
         error_code=1
     elif [[ ! $2 =~ ^[0-9]+$ || $2 -lt 1 ]]; then
