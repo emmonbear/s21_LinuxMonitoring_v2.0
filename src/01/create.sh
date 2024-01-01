@@ -1,74 +1,95 @@
 #!/bin/bash
 
-create_folders_and_files () {
-    local date=$(date +"%d%m%y")
-    local path=$1
-    local count_folders=$2
-    local list_folder_symbols=$3
-    local count_files=$4
-    local list_file_symbols=$(echo $5 | awk -F. '{print $1}')
-    local file_extension=$(echo $5 | awk -F. '{print $2}')
-    local size="${6%?}"
-    local array_foldernames=()
-    local array_filenames=()
+# Создать массивы уникальных имен, каталоги и файлы
+# Parameters:
+#   $1 - абсолютный путь
+#   $2 - количество каталогов
+#   $3 - список букв для каталогов
+#   $4 - количество файлов в каталоге
+#   $5 - список букв для файлов
+#   $6 - размер файла
+create () {
+  path=$1
+  if [[ "${path}" != */ ]]; then
+    path="${path}/"
+  fi
+  readonly path
+  readonly count_folders=$2
+  readonly list_folder_symbols=$3
+  readonly count_files=$4
+  list_file_symbols=$(echo $5 | awk -F. '{print $1}')
+  readonly list_file_symbols
+  file_extension=$(echo $5 | awk -F. '{print $2}')
+  readonly file_extension
+  readonly size="${6%?}"
 
-    local tmp_1=0
-    local tmp_2=0
-    local start=1
-    local finish_1=$(( $count_folders * $count_files / 100 ))
-    local finish_2=$(( $count_folders * $count_files * 3 ))
-    source ./generate_names.sh
-    draw_text "Формирование массивов уникальных имен:"
-    source ./status_bar.sh
-    process_status_bar $start $finish_1 &
-    local pid=$!
-    if ! array_foldernames=($(generate_list_names $count_folders $list_folder_symbols $path)); then
-        error_message "Невозможно создать $count_folders уникальных имен для каталогов"
-        dialog_end
-        kill -SIGINT "$pid"
-        exit 1
-    fi
-    
-    if ! array_filenames=($(generate_list_names $count_files $list_file_symbols $path)); then
-        error_message "Невозможно создать $count_files уникальных имен для файлов"
-        kill -SIGINT "$pid"
-        dialog_end
-        exit 1
-    fi
-    echo -e "\r${UP}${DELETE}\n${DELETE}"
-    echo -e "${UP}${UP}${UP}"
-    draw_text "Генерация файлов и каталогов:"
-    process_status_bar $start $finish_2 &
-    pid=$!
+  array_foldernames=()
+  array_filenames=()
 
-    for folder in "${array_foldernames[@]}"; do
-        local dest_folder="$path${folder}_${date}"
-        if ! mkdir "$dest_folder" 2>/dev/null; then
-            error_message "Невозможно создать каталог по пути ${path}. Требуются root права"
-            kill -SIGINT "$pid"
-            dialog_end
-            exit 1
-        else
-            echo "${dest_folder} $(date +"%d.%m.%Y %H:%M")"  >> log.txt
-            ((tmp_1++))
-            for file in "${array_filenames[@]}"; do
-                local dest_file="${path}${folder}_${date}/${file}_${date}.${file_extension}"
-                fallocate -l $size "$dest_file"
-                echo  " ${dest_file} $(date +"%d.%m.%Y %H:%M") ${size}b" >> log.txt
-                ((tmp_2++))
-                if [[ $(available_memory) -le 1048576 ]]; then
-                    error_message "В системе остается менее 1 Гб свободного места. Создано $tmp_1 каталогов, $tmp_2 файлов"
-                    kill -SIGINT "$pid"
-                    dialog_end
-                    exit 1
-                fi
-            done
-        fi
-    done
-    echo -e "\r${UP}${DELETE}\n${DELETE}"
-    echo -e "${UP}${UP}${UP}"
+  draw_text "Генерация массива уникальных имен каталогов:"
+  source ./generate_names.sh
+  generate_list_names "$count_folders" "$list_folder_symbols" array_foldernames
+
+  delete_up
+  delete_up
+
+  draw_text "Генерация массива уникальных имен файлов:"
+  generate_list_names "$count_files" "$list_file_symbols" array_filenames
+
+  delete_up
+  delete_up
+  
+  draw_text "Генерация файлов и каталогов:"
+  create_folders_and_files
+
+  delete_up
+  delete_up
 }
 
+# Генерация каталогов и файлов
+# Returns:
+#   0 - успешное завершение программы
+#   1 - завершение программы при требовании запуска скрипта sudo
+#   1 - завершение программы при остатке в системе 1Гб или меньше свободной памяти
+create_folders_and_files () {
+  local cnt_folders=0
+  local cnt_files=0
+
+  local -r finish=$(( count_folders * count_files ))
+  local current_iteration=0
+
+  local -r date=$(date +"%d%m%y")
+  
+  for folder in "${array_foldernames[@]}"; do
+    local dest_folder="${path}${folder}_${date}"
+    if ! mkdir "$dest_folder" 2>/dev/null; then
+        delete_up
+        error_message "Невозможно создать каталог по пути ${path}. Требуются root права"
+        dialog_end
+        exit 1
+    else
+      echo "${dest_folder} $(date +"%d.%m.%Y %H:%M")"  >> log.txt
+      ((cnt_folders++))
+      for file in "${array_filenames[@]}"; do
+        local dest_file="${path}${folder}_${date}/${file}_${date}.${file_extension}"
+        fallocate -l $size "$dest_file"
+        ((current_iteration++))
+        status_bar ${current_iteration} ${finish}
+        echo  "${dest_file} $(date +"%d.%m.%Y %H:%M") ${size}b" >> log.txt
+        ((cnt_files++))
+        if [[ $(available_memory) -le 1048576 ]]; then
+          delete_up
+          error_message "В системе остается менее 1 Гб свободного места. Создано $cnt_folders каталогов, $cnt_files файлов"
+          dialog_end
+          exit 1
+        fi
+      done
+    fi
+  done
+  echo ""
+}
+
+# Объем свободной памяти
 available_memory () {
     echo "$(df / | grep /$ | awk '{print $4}')"
 }
