@@ -1,29 +1,39 @@
 #!/bin/bash
 
-YELLOW='\033[1;33m'
-GREEN='\033[1;36m'
-RESET='\033[0m'
-BOLD='\033[1m'
-RED='\033[1;31m'
-DELETE='\033[K'
-UP='\033[A'
+readonly YELLOW='\033[1;33m'
+readonly GREEN='\033[1;36m'
+readonly RESET='\033[0m'
+readonly BOLD='\033[1m'
+readonly RED='\033[1;31m'
+readonly DELETE='\033[K'
+readonly UP='\033[A'
 
+# Нарисовать рамку
 draw_frame () {
     echo -e "${GREEN}${BOLD}${1}${RESET}"
 }
 
+# Выделить текст жирным
 draw_text () {
     echo -e "${BOLD}${1}${RESET}"
 }
 
+# Форма для отображения параметров
 draw_parameters () {
     echo -e "  ${1}${YELLOW}${2}${RESET}"
 }
 
+# $1 жирный $2 желтый
 draw_info () {
     echo -e "${BOLD}${1}${YELLOW}${2}${RESET}"
 }
 
+# Сместить курсор наверх и удалить строку
+delete_up () {
+  echo -e -n "\r${UP}${DELETE}"
+}
+
+# 
 dialog_hello () {
     clear
     draw_frame "====================================================================="
@@ -33,6 +43,7 @@ dialog_hello () {
     echo
 }
 
+# 
 dialog_entered_parameters () {
     draw_text "Введенные параметры:"
     draw_parameters "Список букв, используемых в названиях каталогов:  " "${1}"
@@ -41,6 +52,7 @@ dialog_entered_parameters () {
     echo
 }
 
+# 
 dialog_end () {
     draw_frame "====================================================================="
 }
