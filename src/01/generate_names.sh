@@ -6,20 +6,23 @@
 generate_name () {
   local name="$1"
   local name_length=0
-  local -r cnt_symbols=${#name}
 
+  local -r cnt_symbols=${#name}
   local -r max_length=100
   local -r min_length=4
 
-  if ((${#name} < 4)); then
+  local random_index
+  local char
+  local end_str
+  if ((${cnt_symbols} < 4)); then
     name_length=$(shuf -i $min_length-$max_length -n 1)
   else
-    name_length=$(shuf -i ${#name}-50 -n 1)
+    name_length=$(shuf -i ${cnt_symbols}-${max_length} -n 1)
   fi
   for ((j=0; j<${name_length} - ${cnt_symbols}; j++)); do
-    local random_index=$((RANDOM % ${#name}))
-    local char=${name:$random_index:1}
-    local end_str=${name:$random_index}
+    random_index=$((RANDOM % ${#name}))
+    char=${name:$random_index:1}
+    end_str=${name:$random_index}
     name=${name:0:$random_index}
     name=${name}${char}${end_str}
   done
