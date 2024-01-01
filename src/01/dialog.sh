@@ -18,7 +18,7 @@ draw_text () {
   echo -e "${BOLD}${1}${RESET}"
 }
 
-# Выделить желтым $2
+# Форма для отображения параметров
 draw_parameters () {
   echo -e "  ${1}${YELLOW}${2}${RESET}"
 }
