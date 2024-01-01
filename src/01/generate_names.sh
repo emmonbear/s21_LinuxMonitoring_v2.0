@@ -14,7 +14,7 @@ generate_name () {
   local random_index
   local char
   local end_str
-  if ((${cnt_symbols} < 4)); then
+  if ((${cnt_symbols} < ${min_length})); then
     name_length=$(shuf -i $min_length-$max_length -n 1)
   else
     name_length=$(shuf -i ${cnt_symbols}-${max_length} -n 1)
