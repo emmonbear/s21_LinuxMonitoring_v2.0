@@ -1,33 +1,19 @@
 #!/bin/bash
 
-# Создать рандомное количество файлов в рандомном количестве каталогов
-# в случайной папке
+# Сканирование каталога
 # Parameters:
-#   $1 - список букв для каталогов
-#   $2 - список букв для файлов
-#   $3 - размер файла
-# Returns:
-#   0 - успешное завершение программы, когда не выделяется память для файла
-create () {
-  local -r list_folder_symbols=$1
-  local -r list_file_symbols=$(echo $2 | awk -F. '{print $1}')
-  local -r file_extension=$(echo $2 | awk -F. '{print $2}')
-  local -r size=$3
-
-  local array_path=($(find / -type d  2>/dev/null | grep -Ev '/bin$|/sbin$'))
-  
-  while true; do
-    local current_path=${array_path[$(shuf -i 0-$((${#array_path[@]}-1)) -n 1)]}
-    local folder_count=$(shuf -i 1-100 -n 1)
-    folder_check=($(scan $current_path))
-    for ((i=0; i<$folder_count; i++)); do
-      if ! create_folders "$list_folder_symbols" "$current_path"; then
-        break
-      elif ! create_files $list_file_symbols $file_extension $size; then
-        return 0
-      fi
-    done
+#   $1 - путь
+scan () {
+  local generated_names=()
+  for entry in "$1"/*; do
+    if [[ -e "$entry" ]]; then
+      name=$(basename "$entry")
+      name=${name%%_*}
+      generated_names+=(${name})
+    fi
   done
+  
+  echo ${generated_names[@]}
 }
 
 # Создать каталог
@@ -78,6 +64,9 @@ create_files () {
   local dest_file=""
   local arr=()
 
+  local -r FULL_MEMORY=$(df / | grep /$ | awk '{print $2}')
+  local -r ONE_GB=1048576
+
   source ./generate_names.sh
   for ((i=0; i<file_count;i++)); do
     while true; do
@@ -87,9 +76,14 @@ create_files () {
         dest_file=${dest_folder}/${name}_${date}
         if fallocate -l $size $dest_file 2>/dev/null; then
           echo "$dest_file $date ${size}b" >> log.txt
+
+          local remaining_memory=$(df / | grep /$ | awk '{print $3}')
+
+          source ./status_bar.sh
+          status_bar ${remaining_memory} ${FULL_MEMORY}
         fi
 
-        if [[ $(available_memory) -le 1048576 ]]; then
+        if [[ $(available_memory) -le ${ONE_GB} ]]; then
           echo "В системе остался 1 Гб памяти. Скрипт завершает работу"
           return 1
         fi
@@ -99,20 +93,35 @@ create_files () {
   done
 }
 
-# Сканирование каталога
+# Создать рандомное количество файлов в рандомном количестве каталогов
+# в случайной папке
 # Parameters:
-#   $1 - путь
-scan () {
-  local generated_names=()
-  for entry in "$1"/*; do
-    if [[ -e "$entry" ]]; then
-      name=$(basename "$entry")
-      name=${name%%_*}
-      generated_names+=(${name})
-    fi
-  done
+#   $1 - список букв для каталогов
+#   $2 - список букв для файлов
+#   $3 - размер файла
+# Returns:
+#   0 - успешное завершение программы, когда не выделяется память для файла
+create () {
+  local -r list_folder_symbols=$1
+  local -r list_file_symbols=$(echo $2 | awk -F. '{print $1}')
+  local -r file_extension=$(echo $2 | awk -F. '{print $2}')
+  local -r size=$3
   
-  echo ${generated_names[@]}
+  local array_path=($(find / -type d  2>/dev/null | grep -Ev '/bin$|/sbin$'))
+  
+  while true; do
+    local current_path=${array_path[$(shuf -i 0-$((${#array_path[@]}-1)) -n 1)]}
+    local folder_count=$(shuf -i 1-100 -n 1)
+    folder_check=($(scan ${current_path}))
+    for ((i=0; i<$folder_count; i++)); do
+      if ! create_folders "$list_folder_symbols" "$current_path"; then
+        break
+      elif ! create_files $list_file_symbols $file_extension $size; then
+        delete_up
+        return 0
+      fi
+    done
+  done
 }
 
 # Проверить свободную память
