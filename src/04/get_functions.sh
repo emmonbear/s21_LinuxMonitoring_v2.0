@@ -51,3 +51,14 @@ get_code () {
   echo ${codes[${index}]}
 }
 
+# Сгенерировать случайный метод
+get_method () {
+  local -r methods=(GET POST PUT PATCH DELETE)
+
+  local index
+  index=$(random 0 4)
+  readonly index
+
+  echo ${methods[${index}]}
+}
+
