@@ -74,3 +74,31 @@ get_user_agent () {
   echo ${user_agents[${index}]}
 }
 
+# Сгенерировать случайный URL
+get_URL () {
+  local length
+  length=$(random 4 10)
+
+  local URL
+  URL=$(head -c 100 /dev/urandom | base64 | sed 's/[+=/A-Z]//g' | tail -c ${length})".com"
+
+  local cnt
+  cnt=$(random 2 6)
+  readonly cnt
+
+  local -r extensions=(".txt" ".mp4" ".pdf" ".sh" ".css" ".html" ".jpg" ".png" ".gif" ".jpeg" "")
+
+  local index
+  index=$(random 0 10)
+  readonly index
+
+  for (( i = 0; i < cnt; i++ )); do
+    length=$(random 4 10)
+    URL+="/"$(head -c 100 /dev/urandom | base64 | sed 's/[+=/A-Z]//g' | tail -c ${length})
+  done
+
+  URL+=${extensions[${index}]}
+  readonly URL
+
+  echo $URL
+}
