@@ -73,7 +73,7 @@ create_files () {
       name=$(generate_name $list)
       if [[ ! " ${arr[@]} " =~ " ${name} " ]]; then
         arr+=($name)
-        dest_file=${dest_folder}/${name}_${date}
+        dest_file=${dest_folder}/${name}_${date}.${file_extension}
         if fallocate -l $size $dest_file 2>/dev/null; then
           echo "$dest_file $date ${size}b" >> log.txt
 
