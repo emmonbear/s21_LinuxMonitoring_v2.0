@@ -64,15 +64,31 @@ get_method () {
 
 # Сгенерировать случайный UA
 get_user_agent () {
+  local -r operating_systems=("Windows" "Macintosh" "Linux" "iOS" "Android")
+  local -r versions=("5.0" "5.1" "5.3" "6.0" "6.1" "6.2" "7.0" "7.4" "8.0" "9.0" "9.1")
   local -r user_agents=("Mozilla" "Google Chrome" "Opera" "Safari" "Internet Explorer" \
           "Microsoft Edge" "Crawler and bot" "Library and net tool")
   
   local index
-  index=$(random 0 6)
-  readonly index
 
-  echo ${user_agents[${index}]}
+  local random_os
+  index=$(random 0 4)
+  random_os=${operating_systems[${index}]}
+  readonly random_os
+
+  local random_versions
+  index=$(random 0 10)
+  random_versions=${versions[${index}]}
+  readonly random_versions
+  
+  local random_agents
+  index=$(random 0 7)
+  random_agents=${user_agents[${index}]}
+  readonly random_agents
+
+  echo "${random_agents}/${random_versions} (${random_os})"
 }
+get_user_agent
 
 # Сгенерировать случайный URL
 get_URL () {
@@ -80,7 +96,6 @@ get_URL () {
   length=$(random 4 10)
 
   local URL
-  URL=$(head -c 100 /dev/urandom | base64 | sed 's/[+=/A-Z]//g' | tail -c ${length})".com"
 
   local cnt
   cnt=$(random 2 6)
