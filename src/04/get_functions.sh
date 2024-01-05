@@ -17,10 +17,13 @@ random () {
 
 # Сгенерировать случайный IP
 get_IP () {
-  local ip=$(random 0 255)
+  local ip
+  ip=$(random 0 255)
+
   for (( i = 0; i < 3; i++)); do
     ip+="."$(random 0 255)
   done
+  
   readonly ip
 
   echo "$ip"
