@@ -88,7 +88,6 @@ get_user_agent () {
 
   echo "${random_agents}/${random_versions} (${random_os})"
 }
-get_user_agent
 
 # Сгенерировать случайный URL
 get_URL () {
@@ -116,6 +115,18 @@ get_URL () {
   readonly URL
 
   echo $URL
+}
+
+get_site () {
+  local length
+  length=$(random 4 10)
+  readonly length
+
+  local site
+  site=$(head -c 100 /dev/urandom | base64 | sed 's/[+=/A-Z]//g' | tail -c ${length})".com"
+  readonly site
+
+  echo ${site}
 }
 
 # Сгенерировать случайное время в формате (HH:MM:SS)
