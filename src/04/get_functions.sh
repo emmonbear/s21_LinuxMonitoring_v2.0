@@ -53,12 +53,24 @@ get_code () {
 
 # Сгенерировать случайный метод
 get_method () {
-  local -r methods=(GET POST PUT PATCH DELETE)
+  local -r methods=("GET" "POST" "PUT" "PATCH" "DELETE")
 
   local index
   index=$(random 0 4)
   readonly index
 
   echo ${methods[${index}]}
+}
+
+# Сгенерировать случайный UA
+get_user_agent () {
+  local -r user_agents=("Mozilla" "Google Chrome" "Opera" "Safari" "Internet Explorer" \
+          "Microsoft Edge" "Crawler and bot" "Library and net tool")
+  
+  local index
+  index=$(random 0 6)
+  readonly index
+
+  echo ${user_agents[${index}]}
 }
 
