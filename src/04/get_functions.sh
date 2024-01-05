@@ -23,13 +23,24 @@ get_IP () {
   for (( i = 0; i < 3; i++)); do
     ip+="."$(random 0 255)
   done
-  
+
   readonly ip
 
   echo "$ip"
 }
 
 # Сгенерировать случайный код ответа
+# Коды:
+# 200 - OK: успешный запрос
+# 201 - Created: Ресурс успешно создан
+# 400 - Bad Request: Неверный запрос
+# 401 - Unauthorized: Неавторизованный запрос
+# 403 - Forbidden: Доступ запрещен
+# 404 - Not Found: Ресурс не найден
+# 500 - Internal Server Error: Внутренняя ошибка сервера
+# 501 - Not Implemented: Не реализовано
+# 502 - Bad Gateway: Плохой шлюз
+# 503 - Service Unavailable: Сервис недоступен
 get_code () {
   local -r codes=(200 201 400 401 403 404 500 501 502 503)
 
