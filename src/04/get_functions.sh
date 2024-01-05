@@ -131,3 +131,44 @@ get_time () {
   echo ${date}
 }
 
+# Генерация случайной даты в формате "12/Dec/2023":
+get_date () {
+  local current_date
+  current_date=$(date "+%Y-%m-%d")
+  readonly current_date
+
+  local -r start_date="2023-01-01"
+  
+  local current_timestamp
+  current_timestamp=$(date -d ${current_date} +%s)
+  readonly current_timestamp
+
+  local start_timestamp
+  start_timestamp=$(date -d ${start_date} +%s)
+  readonly start_timestamp
+
+  local days_passed
+  days_passed=$(( (current_timestamp - start_timestamp) / 86400 ))
+  readonly days_passed
+
+  local random_days
+  random_days=$(random 1 ${days_passed})
+  readonly random_days
+
+  local random_date
+  random_date=$(date -d "@$((start_timestamp + random_days * 86400))" "+%d/%b/%Y")
+  readonly random_date
+
+  echo ${random_date}
+}
+
+# Сгенерировать HTTP протокол
+get_HTTP_protocol () {
+  local -r protocols=("HTTP/0.9" "HTTP/1.0" "HTTP/1.1" "HTTP/2" "HTTP/3")
+
+  local index
+  index=$(random 0 4)
+  readonly index
+
+  echo ${protocols[${index}]}
+}
