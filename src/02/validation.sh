@@ -2,7 +2,7 @@
 
 # Вывод сообщения об ошибке и перенаправление его в stderr
 # Parameters:
-#   $1 - текст ошибке
+#   $1 - текст ошибки
 error_message () {
   echo -e "${RED}Ошибка${RESET}: $1" >&2
 }
@@ -35,4 +35,15 @@ validation () {
     fi
   fi
   return $error_code
+}
+
+# Проверка, что пользователь у log.txt не поменялся на root
+# В этом случае файлы и директории будут создаваться, но записи в log.txt не будет
+# Returns:
+#   1 - требуется root
+check_user () {
+  if ! echo "" 2>/dev/null >> log.txt; then
+    error_message "Нет возможности записать в лог файл. Требуются root права"
+    exit 1
+  fi
 }
