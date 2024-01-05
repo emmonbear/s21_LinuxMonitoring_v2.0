@@ -102,3 +102,32 @@ get_URL () {
 
   echo $URL
 }
+
+# Сгенерировать случайное время в формате (HH:MM:SS)
+get_time () {
+  local hour
+  hour=$(random 0 23)
+  if [[ ${hour} -lt 10 ]]; then
+    hour="0"${hour}
+  fi
+  readonly hour
+  
+  local minute
+  minute=$(random 0 59)
+  if [[ ${minute} -lt 10 ]]; then
+    minute="0"${minute}
+  fi
+  readonly minute
+
+  local second
+  second=$(random 0 59)
+  if [[ ${second} -lt 10 ]]; then
+    second="0"${second}
+  fi
+  readonly second
+
+  local -r date="${hour}:${minute}:${second}"
+
+  echo ${date}
+}
+
