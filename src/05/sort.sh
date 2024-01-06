@@ -39,5 +39,11 @@ find_files () {
 # Сортировка по коду ответа
 first_method () {
   rm -f code_sort.log
-  awk '{print $0}' $file_str | sort -t' ' -k9,9 >> code_sort.log
+  awk '{print $0}' ${file_str} | sort -t' ' -k9,9 >> code_sort.log
+}
+
+# Вывод уникальных IP
+second_method () {
+  rm -f ip.log
+  awk '{print $1}' ${file_str} | uniq | sort >> ip.log
 }
