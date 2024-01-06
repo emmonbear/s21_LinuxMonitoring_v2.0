@@ -1,12 +1,28 @@
 #!/bin/bash
 
 main () {
-  source ./validation.sh
-  validation ${@}
-  if [[ $? -eq 0 ]]; then
-    echo "success"
-  else
-    exit 1
-  fi
+  local -r method=${@}
+  
+  source ./sort.sh
+  find_files
+
+  case $method in
+    1)
+      first_method
+      ;;
+    2)
+      second_method
+      ;;
+    3)
+      third_method
+      ;;
+    4)
+      fourth_method
+      ;;
+    *)
+      error_message "Некорректный аргумент"
+      exit 1
+      ;;
+    esac
 }
 main ${@}
