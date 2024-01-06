@@ -53,3 +53,9 @@ third_method () {
   rm -f error.log
   awk '{ if ($9 >= 400) print $9": "$1,$4,$5,$6,$7,$8,$11,$12,$13,$14,$15,$16 }' ${file_str} >> error.log
 }
+
+# Вывод всех уникальные IP, которые встречаются среди ошибочных запросов
+fourth_method () {
+  rm -f ip_error.log
+  awk '{ if ($9 >= 400) print $9": "$1 }' ${file_str} >> ip_error.log
+}
