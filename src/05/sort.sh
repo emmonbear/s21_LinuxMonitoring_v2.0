@@ -34,6 +34,10 @@ find_files () {
   file_str=${file_str::-1}
   readonly file_str
 
-  echo "$file_str"
 }
 
+# Сортировка по коду ответа
+first_method () {
+  rm -f code_sort.log
+  awk '{print $0}' $file_str | sort -t' ' -k9,9 >> code_sort.log
+}
