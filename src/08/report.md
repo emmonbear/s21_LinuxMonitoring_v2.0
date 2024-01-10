@@ -4,7 +4,7 @@
 
 1. [Установка Node Exporter](#1-установка-node-exporter)
 
-## 1. Установка Node Exporter<br/>
+## 1. Установка Node Exporter
 
 * Скачать `Node Exporter`:<br/>
   ```sh
@@ -74,5 +74,29 @@
 * Проверить цели в веб-интерфейсе `Prometheus`:<br/>
 
   ![part_8](./screenshots/4.png)<br/>
+
+[Содержание](#содержание)
+
+## 2. Установка готового дашборда
+
+* Скачать `Node Exporter Quickstart and Dashboard` .json<br/>
+  ```
+  https://grafana.com/grafana/dashboards/13978-node-exporter-quickstart-and-dashboard/
+  ```
+
+  ![part_8](./screenshots/5.png)<br/>
+
+* Запустить bash-скрипт из Части 2 и посмотреть на нагрузку жесткого диска (место на диске и операции чтения/записи)<br/>
+  ![part_8](./screenshots/6.png)<br/>
+
+* Запустить bash-скрипт из Части 3 и посмотреть на нагрузку жесткого диска (место на диске и операции чтения/записи)<br/>
+  ![part_8](./screenshots/7.png)<br/>
+
+* Выполнить команду:<br/>
+  ```sh
+  $ stress -c 2 -i 1 -m 1 --vm-bytes 32M -t 100s
+  ```
+
+  ![part_7](./screenshots/8.png)<br/>
 
 [Содержание](#содержание)
