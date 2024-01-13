@@ -1,7 +1,9 @@
 #!/bin/bash
 
 main () {
-  local -r time_1=$(date +%s)
+  local time_1
+  time_1=$(date +%s)
+  readonly time_1
 
   source ./dialog.sh
   dialog_hello
@@ -16,8 +18,13 @@ main () {
     source ./create.sh
     create "$@"
     
-    local -r time_2=$(date +%s)
-    local -r execution_time=$((time_2 - time_1))
+    local time_2
+    time_2=$(date +%s)
+    readonly time_2
+
+    local execution_time
+    execution_time=$((time_2 - time_1))
+    readonly execution_time
 
     draw_info "Время запуска скрипта: " "$(date -d "@$time_1" +"%d.%m.%y %H:%M")\n"
     draw_info "Время завершения скрипта: " "$(date -d "@$time_2" +"%d.%m.%y %H:%M")\n"
@@ -34,4 +41,3 @@ main () {
 }
 
 main "$@"
-
