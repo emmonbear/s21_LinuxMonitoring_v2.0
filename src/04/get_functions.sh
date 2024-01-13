@@ -5,10 +5,10 @@
 #   $1 - минимальное случайное число
 #   $2 - максимальное случайное число
 random () {
-  local min=${1}
-  local max=${2}
+  local -r min=${1}
+  local -r max=${2}
+  
   local number
-
   number=$(shuf -i ${min}-${max} -n 1)
   readonly number
 
