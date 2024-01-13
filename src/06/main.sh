@@ -38,10 +38,6 @@ find_files () {
 }
 
 main () {
-  if ! command -v goaccess &> /dev/null; then
-    source ./install.sh
-    install
-  fi
   source ./sort.sh
   find_files
   goaccess -f ${file_str} --log-format=COMBINED --time-format=%T -o report.html
