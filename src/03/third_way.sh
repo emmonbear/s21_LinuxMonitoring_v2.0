@@ -29,7 +29,7 @@ third_way () {
   source ./status_bar.sh
   local -r finish=$(( ${#result[@]} ))
   local cnt_status_bar=0
-  local pid=$!
+
   for path in ${result[@]}; do
     if ! rm -rf $path 2>/dev/null && ! rmdir $path 2>/dev/null; then
       echo ""
@@ -41,6 +41,7 @@ third_way () {
       status_bar $cnt_status_bar $finish
     fi
   done
+
   echo
   delete_up
   draw_text "Система была очищена"

@@ -39,7 +39,7 @@ validation_date () {
   local regex='^((0[1-9]|[1-2][0-9]|3[0-1])\.(0[1-9]|1[0-2])\.([0-9]{2}) ([0-1][0-9]|2[0-3])\:([0-5][0-9]))$'
 
   if [[ ! "$date" =~ $regex ]]; then
-    error_message "Введите дату в формате ДД.ММ.ГГ ЧЧ:ММ" #+
+    error_message "Введите дату в формате ДД.ММ.ГГ ЧЧ:ММ"
     error_code=1
   fi
 
@@ -59,7 +59,7 @@ validation_date_1 () {
 
   if [[ $(time_per_sec "$date_1") -gt $(time_per_sec "$date_2") ]]; then
     delete_up
-    error_message "Время начала генерации файлов не может быть больше времени окончания" #+
+    error_message "Время начала генерации файлов не может быть больше времени окончания"
     error_code=1
   fi
 
@@ -78,7 +78,7 @@ validation_mask () {
 
   if [[ ! $mask =~ ^([a-zA-Z]{2,7})\_((0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])([0-9]{2}))$ ]]; then
     delete_up
-    error_message "Введите аргумент в формате symbols_MMDDYY" #+
+    error_message "Введите аргумент в формате symbols_MMDDYY"
     error_code=1
   fi
 

@@ -4,10 +4,10 @@
 # Parameters:
 #   $1 - Время в формате DD.MM.YY HH:MM
 time_per_sec () {
-    local time="$1"
-    IFS=". :" read -a time_array <<< "$time"
-    local time_sec="$(date +%s -d "${time_array[2]}-${time_array[1]}-${time_array[0]} ${time_array[3]}:${time_array[4]}")"
-    echo "$time_sec"
+  local time="$1"
+  IFS=". :" read -a time_array <<< "$time"
+  local time_sec="$(date +%s -d "${time_array[2]}-${time_array[1]}-${time_array[0]} ${time_array[3]}:${time_array[4]}")"
+  echo "$time_sec"
 }
 
 # Формирование регулярного выражения, для его последующего
@@ -16,17 +16,17 @@ time_per_sec () {
 #   $1 - Время начала в секундах
 #   $2 - Время начала в секундах
 regular () {
-    local start=$(time_per_sec "$1")
-    local finish=$(time_per_sec "$2")
-    local current_seconds="$start"
-    local str=""
-    while [[ "$current_seconds" -le "$finish" ]]; do
-        current_date=$(date -d "@$current_seconds" "+%d%m%y")
-        str+=".*_$current_date.*|"
-        current_seconds=$((current_seconds + 86400))
-    done
-    str="${str%?}"
-    echo "$str"
+  local start=$(time_per_sec "$1")
+  local finish=$(time_per_sec "$2")
+  local current_seconds="$start"
+  local str=""
+  while [[ "$current_seconds" -le "$finish" ]]; do
+    current_date=$(date -d "@$current_seconds" "+%d%m%y")
+    str+=".*_$current_date.*|"
+    current_seconds=$((current_seconds + 86400))
+  done
+  str="${str%?}"
+  echo "$str"
 }
 
 # Первый способ очистки памяти
