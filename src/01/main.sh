@@ -2,7 +2,8 @@
 
 main () {
   local start_time
-  readonly start_time=$(date +%s)
+  start_time=$(date +%s)
+  readonly start_time
 
   source ./dialog.sh
   dialog_hello

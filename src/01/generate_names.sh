@@ -91,7 +91,7 @@ generate_list_names () {
     if [[ ${count} -eq 1 ]]; then
       status_bar 1 1
     else
-      status_bar ${i} $(( count - 1))
+      status_bar ${i} $(( count - 1 ))
     fi
   done
   echo ""
